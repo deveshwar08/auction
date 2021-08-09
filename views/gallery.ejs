@@ -1,0 +1,10 @@
+<%- include('./partials/header.ejs') %>
+        <h1>Gallery</h1>
+        <div class="container">
+            <% data.forEach(function(items){ %>
+                <div class="col">
+                    <p><%- items %></p>
+                </div>
+            <% }); %>
+        </div> 
+<%- include('./partials/footer.ejs'); %>
