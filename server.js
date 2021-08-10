@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const cookieParser = require('cookie-parser');
 const { requireAuth, checkUser } = require('./middleware/authMiddleware');
+const auctionRoutes = require('./routes/auctionRoutes');
 
 const port = 8000;
 
@@ -24,7 +25,8 @@ mongoose.connect(dbURI, {dbName: "auction", useNewUrlParser: true, useUnifiedTop
 app.get('*',checkUser);
 app.get('/', (req, res) => res.render('index'));
 app.use(authRoutes);
-app.get('/gallery',requireAuth,(req,res) => res.render('gallery'));
+app.use(auctionRoutes);
+//app.get('/gallery',requireAuth,(req,res) => res.render('gallery'));
 
 
 

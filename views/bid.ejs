@@ -1,0 +1,58 @@
+<%- include('./partials/header.ejs') %>
+    <div>
+        <h1>Bid Id : <%- bidDetails._id %> </h1>
+        <h3>Auctioner : <%- bidDetails.auctioner %> </h3>
+        <h3>Base Bid : <%- bidDetails.baseBid %> </h3>
+        <h3>Item Name : <%- bidDetails.itemName %> </h3>
+        <% if(bidDetails.highestBidder && bidDetails.bidAmount){ %>
+            <h3>Highest Bidder : <%- bidDetails.highestBidder %> </h3>
+            <h3>Current Bid : <%- bidDetails.bidAmount %> </h3>
+        <% }else{ %>
+            <h5>No Bids till now</h5>
+        <% } %>
+    </div>
+    <form>
+        <label for="amount">Bid Amount</label>
+        <input type="number" name="amount">
+        <div class="error"></div>
+        <button>Bid</button>
+    </form>
+    <script>
+        console.log(user.email);
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', async (e)=> {
+
+            e.preventDefault();
+
+            const bidAmount = form.amount.value;
+            const bidder = user.email;
+            if(bidAmount > bidDetails.bidAmount)
+            {
+                try {
+                    const res = await fetch('bid/'+ bidDetails.bidId + '/',{
+                        method: 'POST',
+                        body: JSON.stringify({bidder, bidAmount}),
+                        header: {'Content-Type' : 'application/json'}
+                    });
+
+                    const data = await res.json();
+                    console.log(data);
+
+                    location.reload();
+                }
+                catch(err) {
+                    console.log(err);
+                }
+            }
+            else {
+                const bidError = document.querySelector('.error');
+                bidError.textContent = "You bidded lower than the current bid";
+            }
+
+        });
+
+            
+         
+    </script>
+<%- include('./partials/footer.ejs')%> 
