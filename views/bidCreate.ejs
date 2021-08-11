@@ -1,9 +1,37 @@
 <%- include('./partials/header.ejs') %>
-    <form action="/create-auction" method="POST" enctype="application/x-www-form-urlencoded">
+    <form>
         <label for="itemName">Item Name:</label>
         <input name="itemName" type="text">
         <label for="baseBid">Base bid:</label>
         <input name="baseBid" type="number">
         <button type="submit">Auction item</button>
     </form>
+
+    <script>
+        const form = document.querySelector('form');
+    
+        form.addEventListener('submit',async (e) =>{
+       
+    
+            e.preventDefault();
+            const itemName = form.itemName.value;
+            const baseBid = form.baseBid.value;
+    
+            try{
+                const res = await fetch('/create-auction',{
+                    method: 'POST',                    
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({itemName,baseBid}),
+                });
+                const data = await res.json();
+                console.log(data);
+                if(data.auction){
+                    location.assign('/');
+                }
+            }
+            catch (err){
+                console.log(err);
+            }
+        });
+    </script>
 <%- include('./partials/footer') %> 

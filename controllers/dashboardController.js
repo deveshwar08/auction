@@ -12,11 +12,11 @@ module.exports.dashboard_get = async (req, res) => {
         const userEmail = user.email;
         try {
             const auctioned = await Auction.find({auctioner: userEmail});
-            const bidded = await Auction.find({highestBidder: userEmail});
+            const bidded = await Auction.find({bids:{$elemMatch:{bidder: userEmail}}});
             res.render('dashboard',{data : {auctioned: auctioned,bidded: bidded}});
         }
         catch(err) {
-            res.status(400).send(err);
+            res.status(400).send(err.message);
         }
     });   
 }

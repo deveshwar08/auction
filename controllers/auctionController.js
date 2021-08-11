@@ -12,10 +12,10 @@ module.exports.bid_post = async (req, res) => {
         const bidAmount = req.body.amount;
         try {
             const auction = await Auction.bid(req.params.bidId, bidder, bidAmount);
-            res.status(200).send({auction});
+            res.status(200).json({auction});
         }
         catch(err) {
-            res.status(400).send(err);
+            res.status(400).json({err});
         }
     });        
 }
@@ -28,8 +28,7 @@ module.exports.bid_get = async (req, res) => {
         res.status(200).render('bid',{bidDetails: bidDetails});
     }
     catch(err) {
-        res.status(400).json({err});
-        console.log(err);
+        res.status(400).send(err);
     }
 }
 
@@ -39,15 +38,12 @@ module.exports.bid_create_post = async (req, res) => {
         const userId = mongoose.Types.ObjectId(decodedToken.id)
         const user = await User.findById(userId);
         const auctioner = user.email;
-        console.log("Req",req);
         const baseBid = req.body.baseBid;
         const itemName = req.body.itemName;
-        console.log("Base bid",baseBid);
-        console.log("item name",itemName);
 
         try {
             const auction = await Auction.create({auctioner: auctioner,baseBid : baseBid,itemName : itemName});
-            res.status(200).send("created successfully");
+            res.status(200).json({auction});
         }
         catch(err) {
             res.status(400).json({err});

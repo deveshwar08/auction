@@ -1,5 +1,17 @@
 const mongoose = require('mongoose');
 
+const bidSchema = new mongoose.Schema({
+    bidder: {
+        type: String,
+        required: true,
+        lowercase: true
+    },
+    bidAmount: {
+        type: String,
+        required: true
+    }
+});
+
 const auctionSchema = new mongoose.Schema({
     auctioner: {
         type: String,
@@ -14,6 +26,7 @@ const auctionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    bids:[bidSchema],
     highestBidder: {
         type: String,
         lowercase: true
@@ -28,32 +41,68 @@ auctionSchema.statics.bid = async function(bidId, bidder, bidAmount){
     const auction = await this.findById(mongoose.Types.ObjectId(bidId));
     if(auction){
         if(auction.bidAmount)
-        {
-            
+        {            
             if(bidAmount > auction.bidAmount)
             {
-                this.findByIdAndUpdate(bidId,{highestBidder: bidder},{bidAmount: bidAmount});
-
+                let flag = 0;
+                auction.bids.forEach( bid => {
+                    if(bid.bidder === bidder)
+                        flag++;
+                });
+                if(flag === 0){
+                    try{
+                        await auction.update({highestBidder: bidder, bidAmount: bidAmount, $push: {bids: {bidder: bidder, bidAmount: bidAmount}}});
+                    }
+                    catch(err){
+                        console.log(err);
+                    }
+                }
+                else{
+                    try{
+                        await auction.update({highestBidder: bidder , bidAmount: bidAmount, bids: {bidder: bidder, bidAmount: bidAmount}});
+                    }
+                    catch(err){
+                        console.log(err);
+                    }
+                }
             }
-            else{
-                
-                throw Error("Bidded lower than the highest bid amount");
+            else{                
+                return Error("Bidded lower than the highest bid amount");
             }
         }
-        else {
-            
+        else {            
             if(bidAmount > auction.baseBid)
             {
-                this.findByIdAndUpdate(bidId,{highestBidder: bidder},{bidAmount: bidAmount});
+                let flag = 0;
+                auction.bids.forEach( bid => {
+                    if(bid.bidder === bidder)
+                        flag++;
+                });
+                if(flag === 0){
+                    try{
+                        await auction.update({highestBidder: bidder, bidAmount: bidAmount, $push: {bids: {bidder: bidder, bidAmount: bidAmount}}});
+                    }
+                    catch(err){
+                        console.log(err);
+                    }
+                }
+                else{
+                    try{
+                        await auction.update({highestBidder: bidder , bidAmount: bidAmount, bids: {bidder: bidder, bidAmount: bidAmount}});
+                    }
+                    catch(err){
+                        console.log(err);
+                    }
+                }
             }
             else{
-                throw Error("Bidded lower than the base bid");
+                return Error("Bidded lower than the base bid");
             }
         }
     }
     else {
         console.log("Invalid auction");
-        throw Error("No available auction");
+        return Error("No available auction");
     }
 }
 
@@ -65,7 +114,7 @@ auctionSchema.statics.getBidDetails = async function(bidId){
         return auction;
     }
     else {
-        throw Error("No avialable auction");
+        return Error("No avialable auction");
         
     }
 }

@@ -12,10 +12,36 @@
         <% } %>
     </div>
     <% const url = '"/bid/'+bidDetails._id+'/"' %> 
-    <form action=<%- url %> method="POST" enctype="application/x-www-form-urlencoded">
+    <form>
         <label for="amount">Bid Amount</label>
         <input type="number" name="amount">
         <div class="error"></div>
         <button type="submit">Bid</button>
     </form>
+    <div class="success"></div>
+    <script>
+        const form = document.querySelector('form');
+        form.addEventListener('submit',async (e) =>{
+    
+
+            e.preventDefault();
+            const amount =  form.amount.value;
+            try{
+                const res = await fetch(window.location.pathname,{
+                    method: 'POST',                    
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({amount}),
+                });
+                const data = await res.json();
+                console.log(data);
+                if(data){
+                    document.querySelector('.success').textContent = "Bidded Successfully";
+                    location.assign(window.location);
+                }
+            }
+            catch (err){
+                document.querySelector('.error').textContent = err;
+            }
+        });
+    </script>
 <%- include('./partials/footer.ejs')%> 

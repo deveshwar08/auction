@@ -4,7 +4,7 @@
 
 <h3>Email: <%- user.email %></h3>
 
-<% if(data.auctioned != null) { %>
+<% if(data.auctioned.length !== 0) { %>
     <h3>Your Auctions</h3>
 
     <div class="container">
@@ -13,6 +13,15 @@
                 <h5>Item Name: <%- item.itemName %> </h5>
                 <h6>Highest Bidder: <%- item.highestBidder %></h6>
                 <h7>Current Bid: <%- item.bidAmount %> </h7>
+                <h7>Other bids:</h7>
+                <ul>
+                <% item.bids.forEach( bid => { %>
+                    <li>
+                        <h8>Bidder: <%- bid.bidder %> </h8>
+                        <h8>Bid: <%- bid.bidAmount %> </h8>
+                    </li>
+                 <% }) %>
+                </ul> 
                 <a href="/bid/<%- item.id %>">Auction Link</a>
             </div>
         <% }) %>
@@ -21,20 +30,26 @@
     <h3>You auctioned 0 items</h3>
 
 <% } %> 
-<% if(data.bidded != null) { %>
+<% if(data.bidded.length !== 0) { %>
     <h3>Your bids</h3>
 
     <div class="container">
         <% data.bidded.forEach( item => { %>
             <div class="col">
                 <h5>Item Name: <%- item.itemName %> </h5>
-                <h7>Your Bid: <%- item.bidAmount %> </h7>
+                <h7>Current Bid: <%- item.bidAmount %> </h7>
+                <% item.bids.forEach( bid => { %>
+                    <% if(bid.bidder === user.email){ %>
+                        <h7>Your bid: <%- bid.bidAmount %> </h7>
+                    <% } %> 
+
+                <% }) %> 
                 <a href="/bid/<%- item.id %>">Auction Link</a>
             </div>
         <% }) %>
     </div>
 <% }else { %>
-    <h3>You auctioned 0 items</h3>
+    <h3>You bidded 0 items</h3>
 
 <% } %> 
 
