@@ -1,0 +1,41 @@
+<%- include('./partials/header.ejs') %>
+
+<h1>Profile:</h1>
+
+<h3>Email: <%- user.email %></h3>
+
+<% if(data.auctioned != null) { %>
+    <h3>Your Auctions</h3>
+
+    <div class="container">
+        <% data.auctioned.forEach( item => { %>
+            <div class="col">
+                <h5>Item Name: <%- item.itemName %> </h5>
+                <h6>Highest Bidder: <%- item.highestBidder %></h6>
+                <h7>Current Bid: <%- item.bidAmount %> </h7>
+                <a href="/bid/<%- item.id %>">Auction Link</a>
+            </div>
+        <% }) %>
+    </div>
+<% }else { %>
+    <h3>You auctioned 0 items</h3>
+
+<% } %> 
+<% if(data.bidded != null) { %>
+    <h3>Your bids</h3>
+
+    <div class="container">
+        <% data.bidded.forEach( item => { %>
+            <div class="col">
+                <h5>Item Name: <%- item.itemName %> </h5>
+                <h7>Your Bid: <%- item.bidAmount %> </h7>
+                <a href="/bid/<%- item.id %>">Auction Link</a>
+            </div>
+        <% }) %>
+    </div>
+<% }else { %>
+    <h3>You auctioned 0 items</h3>
+
+<% } %> 
+
+<%- include('./partials/footer.ejs') %> 
