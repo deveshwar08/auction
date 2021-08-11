@@ -17,20 +17,14 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-//fire a func after an user is added
-/*userSchema.post('save',function(doc, next){
-    console.log("new user was created and saved",doc);
-    next();
-});*/
 
-//fire a func before an user is added
 userSchema.pre('save',async function(next){
     const salt = await bcrypt.genSalt();
     this.password = await bcrypt.hash(this.password, salt);
     next();
 });
 
-//static method to log in user
+
 userSchema.statics.login = async function(email, password){
     const user = await this.findOne({email});
     if(user){

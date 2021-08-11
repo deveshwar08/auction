@@ -11,6 +11,7 @@ const app = express();
 
 app.use(express.static('public'));
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 
 
@@ -26,7 +27,7 @@ app.get('*',checkUser);
 app.get('/', (req, res) => res.render('index'));
 app.use(authRoutes);
 app.use(auctionRoutes);
-//app.get('/gallery',requireAuth,(req,res) => res.render('gallery'));
+app.get('/gallery',requireAuth,(req,res) => res.render('gallery'));
 
 
 

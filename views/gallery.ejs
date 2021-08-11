@@ -1,9 +1,10 @@
 <%- include('./partials/header.ejs') %>
         <h1>Gallery</h1>
         <div class="container">
-            <% data.forEach(function(items){ %>
+            <% data.forEach(function(item){ %>
                 <div class="col">
-                    <p><%- items %></p>
+                    <h3>Item Name:<%- item.itemName %></h3>
+                    <h4>Highest Bidder:<%- item.highestBidder %></h4>
                 </div>
             <% }); %>
         </div> 

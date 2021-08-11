@@ -6,6 +6,7 @@ const router = Router();
 
 router.post('/create-auction',requireAuth,auctionController.bid_create_post);
 router.get('/create-auction',requireAuth, auctionController.bid_create_get);
+router.get('/gallery',auctionController.gallery);
 router.get('/bid/:bidId',auctionController.bid_get);
 router.post('/bid/:bidId',requireAuth,auctionController.bid_post);
 

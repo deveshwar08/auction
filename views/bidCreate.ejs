@@ -1,36 +1,9 @@
 <%- include('./partials/header.ejs') %>
-    <form>
-        <label for="name">Item Name:</label>
-        <input name="name" type="text">
-        <label for="basebid">Base bid:</label>
-        <input name="basebid" type="number">
-        <button>Auction item</button>
+    <form action="/create-auction" method="POST" enctype="application/x-www-form-urlencoded">
+        <label for="itemName">Item Name:</label>
+        <input name="itemName" type="text">
+        <label for="baseBid">Base bid:</label>
+        <input name="baseBid" type="number">
+        <button type="submit">Auction item</button>
     </form>
-    <script>
-        const form = document.querySelector('form');
-
-        form.addEventListener('submit', async (e) => {
-            
-            e.preventDefault();
-
-            const itemName = form.name.value;
-            const baseBid = form.basebid.balue;
-            const auctioner = user.email;
-
-            try {
-                const res = await fetch('/create-auction',{
-                    method: 'POST',
-                    body: JSON.stringify({auctioner: auctioner, baseBid : baseBid, itemName : itemName}),
-                    header: {'Content-Type': 'application/json'}
-                });
-
-                const data = await res.json();
-                console.log("Data:",data);
-            }
-            catch(err){
-                console.log(err);
-            }
-        });
-    </script>
-
 <%- include('./partials/footer') %> 
