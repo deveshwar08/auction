@@ -34,6 +34,10 @@ const auctionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    expiryDate: {
+        type: Date,
+        required: true
+    },
     bids:[bidSchema],
     highestBidder: {
         type: String,
@@ -132,16 +136,6 @@ auctionSchema.statics.getBidDetails = async function(bidId){
     }
 }
 
-auctionSchema.statics.update = async function(bidId, itemName, description, imageUrl){
-    const auction = await this.findById(mongoose.Types.ObjectId(bidId));
-    if(auction){
-        await auction.update({itemName: itemName, description: description,imageUrl: imageUrl});
-        return auction;
-    }
-    else {
-        throw Error("No avialable auction");        
-    }
-}
 
 auctionSchema.statics.delete = async function(bidId){
     const auction = await this.findById(mongoose.Types.ObjectId(bidId));

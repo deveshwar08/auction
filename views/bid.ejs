@@ -5,6 +5,7 @@
             <h3>Auctioner : <%- bidDetails.auctioner %> </h3>
             <h3>Base Bid : <%- bidDetails.baseBid %> </h3>
             <h3>Item Name : <%- bidDetails.itemName %> </h3>
+            <h3 class="text-danger">Expires On : <%- bidDetails.expiryDate %> </h3>
             <img src="<%- bidDetails.imageUrl %>" alt="Image of <%- bidDetails.itemName %>" height="200" width="300" />
             <% if(bidDetails.highestBidder && bidDetails.bidAmount){ %>
                 <h3>Highest Bidder : <%- bidDetails.highestBidder %> </h3>
@@ -15,13 +16,15 @@
         </div>
         <% if(bidDetails.auctioner == user.email){ %>
             <h3>Update your auction</h3>
-            <form id="update" style="text-align: left;" action="/bid-update/<%- bidDetails._id %>">
+            <form id="update" style="text-align: left;" method="POST"action="/bid-update/<%- bidDetails._id %>">
                 <label for="itemName">Item Name:</label>
                 <input name="itemName" type="text">
                 <label for="description">Description:</label>
                 <textarea name="description"></textarea>
                 <label for="imageUrl">Image Url:</label>
                 <input name="imageUrl" type="url">
+                <label for="expiryDate">Expiry Date & time:</label>
+                <input name="expiryDate" type="datetime-local">
                 <button type="submit">Update</button>
             </form>
             <br />
@@ -39,6 +42,7 @@
             <div class="success"></div>
         <% } %>
     </div>
+    <% if(bidDetails.auctioner != user.email){ %>
     <script>
         const form = document.querySelector('#bid');
         form.addEventListener('submit',async (e) =>{
@@ -64,4 +68,5 @@
             }
         });
     </script>
+    <% } %> 
 <%- include('./partials/footer.ejs')%> 

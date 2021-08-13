@@ -15,7 +15,7 @@ module.exports.bid_post = async (req, res) => {
             res.status(200).json({auction});
         }
         catch(err) {
-            res.status(400).json({err});
+            res.status(400).send(err.message);
         }
     });        
 }
@@ -25,8 +25,16 @@ module.exports.bid_get = async (req, res) => {
        
     try {
         const bidDetails = await Auction.getBidDetails(req.params.bidId);
-        if(bidDetails instanceof Auction)
-            res.status(200).render('bid',{bidDetails: bidDetails});
+        let currentDate = new Date();
+        console.log(bidDetails.expiryDate,currentDate);
+        console.log(typeof bidDetails.expiryDate, typeof currentDate);
+
+        if(bidDetails instanceof Auction){
+            if(bidDetails.expiryDate > currentDate)
+                res.status(200).render('bid',{bidDetails: bidDetails});
+            else
+                res.status(400).send("auction expired");
+        }
         else
             res.status(400).send("no such auction");
     }
@@ -45,9 +53,10 @@ module.exports.bid_create_post = async (req, res) => {
         const itemName = req.body.itemName;
         const description = req.body.description;
         const imageUrl = req.body.imageUrl;
+        const expiryDate = req.body.expiryDate;
 
         try {
-            const auction = await Auction.create({auctioner: auctioner,baseBid : baseBid,itemName : itemName,description: description,imageUrl: imageUrl});
+            const auction = await Auction.create({auctioner: auctioner,baseBid : baseBid,itemName : itemName,description: description,imageUrl: imageUrl,expiryDate: expiryDate});
             res.status(200).json({auction});
         }
         catch(err) {
@@ -73,13 +82,15 @@ module.exports.bid_update = async (req, res) => {
     const description = req.body.description;
     const imageUrl = req.body.imageUrl;
     const bidId = req.params.bidId;
+    const expiryDate = req.body.expityDate;
 
     try {
-        const auction = await Auction.update(bidId, itemName, description, imageUrl);
-        res.status(200).json({auction});
+        const auction = await Auction.findById(mongoose.Types.ObjectId(bidId));
+        await auction.update({itemName: itemName, description: description, imageUrl: imageUrl,expiryDate: expiryDate});
+        res.status(200).redirect('/bid/'+bidId);
         
     } catch (err) {
-        res.status(400).json({err});
+        res.status(400).send(err.message);
         console.log(err);
     }
 }

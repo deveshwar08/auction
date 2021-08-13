@@ -16,6 +16,7 @@
             <div class="col-md-4 col-sm-6">
                 <img src="<%- item.imageUrl %>" alt="Image of<%- item.itemName %> " height="200" width="300"/>
                 <h5>Item Name: <%- item.itemName %> </h5>
+                <h5 class="text-danger">Expires On: <%- item.expiryDate %> </h5>
                 <h6>Highest Bidder: <%- item.highestBidder %></h6>
                 <br/>
                 <h7>Current Bid: <%- item.bidAmount %> </h7>
@@ -47,6 +48,7 @@
             <div class="col-md-4 col-sm-6">
                 <img src="<%- item.imageUrl %>" alt="Image of<%- item.itemName %> " height="200" width="300"/>
                 <h5>Item Name: <%- item.itemName %> </h5>
+                <h5 class="text-danger">Expires On: <%- item.expiryDate %> </h5>
                 <h7>Current Bid: <%- item.bidAmount %> </h7>
                 <br/>
                 <% item.bids.forEach( bid => { %>

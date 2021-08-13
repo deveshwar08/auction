@@ -8,6 +8,8 @@
         <textarea name="description" ></textarea>
         <label for="imageUrl">Give the image's url*: </label>
         <input type="url" name="imageUrl" required>
+        <label for="expiryDate">Expiry Date & time:</label>
+        <input name="expiryDate" type="datetime-local" required>
         <button type="submit">Auction item</button>
     </form>
 
@@ -22,12 +24,13 @@
             const baseBid = form.baseBid.value;
             const imageUrl = form.imageUrl.value;
             const description = form.description.value;
+            const expiryDate = form.expiryDate.value;
     
             try{
                 const res = await fetch('/create-auction',{
                     method: 'POST',                    
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({itemName,baseBid,description,imageUrl}),
+                    body: JSON.stringify({itemName,baseBid,description,imageUrl,expiryDate}),
                 });
                 const data = await res.json();
                 console.log(data);
