@@ -25,10 +25,13 @@ module.exports.bid_get = async (req, res) => {
        
     try {
         const bidDetails = await Auction.getBidDetails(req.params.bidId);
-        res.status(200).render('bid',{bidDetails: bidDetails});
+        if(bidDetails instanceof Auction)
+            res.status(200).render('bid',{bidDetails: bidDetails});
+        else
+            res.status(400).send("no such auction");
     }
     catch(err) {
-        res.status(400).send(err);
+        res.status(400).send(err.message);
     }
 }
 
@@ -40,13 +43,15 @@ module.exports.bid_create_post = async (req, res) => {
         const auctioner = user.email;
         const baseBid = req.body.baseBid;
         const itemName = req.body.itemName;
+        const description = req.body.description;
+        const imageUrl = req.body.imageUrl;
 
         try {
-            const auction = await Auction.create({auctioner: auctioner,baseBid : baseBid,itemName : itemName});
+            const auction = await Auction.create({auctioner: auctioner,baseBid : baseBid,itemName : itemName,description: description,imageUrl: imageUrl});
             res.status(200).json({auction});
         }
         catch(err) {
-            res.status(400).json({err});
+            res.status(400).send(err.message);
             console.log(err);
         }
     });
@@ -61,4 +66,31 @@ module.exports.gallery = async (req, res) => {
         res.render('gallery',{data: docs});
     });
 
+}
+
+module.exports.bid_update = async (req, res) => {
+    const itemName = req.body.itemName;
+    const description = req.body.description;
+    const imageUrl = req.body.imageUrl;
+    const bidId = req.params.bidId;
+
+    try {
+        const auction = await Auction.update(bidId, itemName, description, imageUrl);
+        res.status(200).json({auction});
+        
+    } catch (err) {
+        res.status(400).json({err});
+        console.log(err);
+    }
+}
+
+module.exports.bid_delete = async (req, res) => {
+    const bidId = req.params.bidId;
+    try {
+        await Auction.delete(bidId);
+        res.status(200).send("deleted successfully");
+    } catch (err) {
+        res.status(400).json({err});
+        console.log(err);
+    }
 }

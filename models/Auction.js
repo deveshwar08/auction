@@ -26,6 +26,14 @@ const auctionSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    description:{
+        type: String,
+        required: true
+    },
+    imageUrl: {
+        type: String,
+        required: true
+    },
     bids:[bidSchema],
     highestBidder: {
         type: String,
@@ -35,6 +43,11 @@ const auctionSchema = new mongoose.Schema({
         type: Number
     }
 });
+
+auctionSchema.path('imageUrl').validate((val) => {
+    urlRegex = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/;
+    return urlRegex.test(val);
+}, 'Invalid URL.');
 
 auctionSchema.statics.bid = async function(bidId, bidder, bidAmount){
 
@@ -67,7 +80,7 @@ auctionSchema.statics.bid = async function(bidId, bidder, bidAmount){
                 }
             }
             else{                
-                return Error("Bidded lower than the highest bid amount");
+                throw Error("Bidded lower than the highest bid amount");
             }
         }
         else {            
@@ -96,13 +109,13 @@ auctionSchema.statics.bid = async function(bidId, bidder, bidAmount){
                 }
             }
             else{
-                return Error("Bidded lower than the base bid");
+                throw Error("Bidded lower than the base bid");
             }
         }
     }
     else {
         console.log("Invalid auction");
-        return Error("No available auction");
+       throw Error("No available auction");
     }
 }
 
@@ -114,8 +127,29 @@ auctionSchema.statics.getBidDetails = async function(bidId){
         return auction;
     }
     else {
-        return Error("No avialable auction");
+        throw Error("No avialable auction");
         
+    }
+}
+
+auctionSchema.statics.update = async function(bidId, itemName, description, imageUrl){
+    const auction = await this.findById(mongoose.Types.ObjectId(bidId));
+    if(auction){
+        await auction.update({itemName: itemName, description: description,imageUrl: imageUrl});
+        return auction;
+    }
+    else {
+        throw Error("No avialable auction");        
+    }
+}
+
+auctionSchema.statics.delete = async function(bidId){
+    const auction = await this.findById(mongoose.Types.ObjectId(bidId));
+    if(auction){
+        await this.findByIdAndDelete(mongoose.Types.ObjectId(bidId));
+    }
+    else{
+        throw Error("No auction available to delete");
     }
 }
 
