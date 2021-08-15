@@ -18,13 +18,13 @@
             <h3>Update your auction</h3>
             <form id="update" style="text-align: left;" method="POST"action="/bid-update/<%- bidDetails._id %>">
                 <label for="itemName">Item Name:</label>
-                <input name="itemName" type="text">
+                <input name="itemName" type="text" placeholder="<%- bidDetails.itemName %> ">
                 <label for="description">Description:</label>
-                <textarea name="description"></textarea>
+                <textarea name="description" placeholder="<%-bidDetails.description %>"></textarea>
                 <label for="imageUrl">Image Url:</label>
-                <input name="imageUrl" type="url">
+                <input name="imageUrl" type="url" placeholder="<%- bidDetails.imageUrl %>">
                 <label for="expiryDate">Expiry Date & time:</label>
-                <input name="expiryDate" type="datetime-local">
+                <input name="expiryDate" type="datetime-local" placeholder="<%- bidDetails.expiryDate %> ">
                 <button type="submit">Update</button>
             </form>
             <br />

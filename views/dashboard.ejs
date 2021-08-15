@@ -40,6 +40,7 @@
     <h3 class="text-center text-warning">You auctioned 0 items</h3>
 
 <% } %> 
+
 <% if(data.bidded.length !== 0) { %>
     <h3>Your bids</h3>
 
@@ -69,5 +70,6 @@
 
 <% } %> 
     </div>
+    <a class="text-center btn" href="/create-auction">Auction an item</a>
 
 <%- include('./partials/footer.ejs') %> 

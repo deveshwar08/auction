@@ -99,7 +99,7 @@ module.exports.bid_delete = async (req, res) => {
     const bidId = req.params.bidId;
     try {
         await Auction.delete(bidId);
-        res.status(200).send("deleted successfully");
+        res.status(200).redirect('/dashboard');
     } catch (err) {
         res.status(400).json({err});
         console.log(err);
