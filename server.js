@@ -25,7 +25,7 @@ mongoose.connect(dbURI, {dbName: "auction", useNewUrlParser: true, useUnifiedTop
 
 // routes
 app.get('*',checkUser);
-app.get('/', (req, res) => res.render('index'));
+app.get('/',(req, res) => {res.redirect('/dashboard')});
 app.use(authRoutes);
 app.use(auctionRoutes);
 app.use(dashboardRoutes);
