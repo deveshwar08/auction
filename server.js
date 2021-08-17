@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const { requireAuth, checkUser } = require('./middleware/authMiddleware');
 const auctionRoutes = require('./routes/auctionRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
+const searchRoutes = require('./routes/searchRoutes');
 
 const port = 8000;
 
@@ -29,7 +30,7 @@ app.get('/',(req, res) => {res.redirect('/dashboard')});
 app.use(authRoutes);
 app.use(auctionRoutes);
 app.use(dashboardRoutes);
-app.get('/gallery',requireAuth,(req,res) => res.render('gallery'));
+app.use(searchRoutes);
 
 
 

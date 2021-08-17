@@ -1,0 +1,65 @@
+<%- include('partials/header'); -%>
+<form>
+    <label for="search">Search for items:</label>
+    <input name="search" type="text">
+    <button type="submit">Search</button>
+</form>
+<div class="container">
+    <div class="row">
+
+    </div>
+</div>
+<script>
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit',async function(e){
+
+        e.preventDefault();
+        const term = form.search.value;
+
+        try{
+            const res = await fetch('/search',{
+                method: 'POST',
+                body: JSON.stringify({term}),
+                headers: {'Content-Type': 'application/json'}
+            });
+
+            const data = await res.json();
+            console.log(data.data);
+            const pDiv = document.getElementsByClassName('row')[0];
+            data.data.forEach(item => {
+                let div = document.createElement("div");
+                div.className = "col-md-4 col-md-6";
+                let img = document.createElement("img");
+                img.height = 200;
+                img.width = 200;
+                img.alt = "Image of " + item.itemName;
+                img.src = item.imageUrl;
+                let h3 = document.createElement("h3");
+                let heading = document.createTextNode("Item Name : "+item.itemName);
+                h3.appendChild(heading);
+                let h4 = document.createElement("h4");
+                let bidderName;
+                if(typeof item.highestBidder != "undefined")
+                    bidderName = document.createTextNode("Highest Bidder : "+item.highestBidder);
+                else
+                    bidderName = document.createTextNode("Highest Bidder : ");
+                h4.appendChild(bidderName);
+                let a = document.createElement("a");
+                a.className = "btn";
+                a.href = "/bid/" + item.id;
+                let link = document.createTextNode("Auction Link");
+                a.appendChild(link);
+                div.appendChild(img);
+                div.appendChild(h3);
+                div.appendChild(h4);
+                div.appendChild(a);
+                pDiv.appendChild(div);
+            });
+        }
+        catch (err){
+            console.log(err);
+        }
+    });
+</script>  
+<%- include('partials/footer'); -%> 
